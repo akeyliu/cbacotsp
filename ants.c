@@ -303,7 +303,9 @@ void global_update_pheromone( ant_struct *a )
 	j = a->tour[i];
 	h = a->tour[i+1];
 	//pheromone[j][h] += d_tau;
-	pheromone[j][h] += ( 1 + dContribution ) / ( 1 + dContribution * instance.n * instance.distance[j][h] / a->tour_length );
+	//pheromone[j][h] += ( 1 + dContribution ) / ( 1 + dContribution * instance.n * instance.distance[j][h] / a->tour_length );
+	//pheromone[j][h] += ( 1 - dContribution * instance.distance[j][h] / a->tour_length ) / ( 1 - dContribution / instance.n ) / a->tour_length;
+	pheromone[j][h] += 2 / ( a->tour_length + dContribution * instance.n * instance.distance[j][h] );
 	pheromone[h][j] = pheromone[j][h];
     }
 }
@@ -323,11 +325,12 @@ void global_update_pheromone_weighted( ant_struct *a, long int weight )
 
     TRACE ( printf("global pheromone update weighted\n"); );
 
-    d_tau = (double) weight / (double) a->tour_length;
+    //d_tau = (double) weight / (double) a->tour_length;
     for ( i = 0 ; i < n ; i++ ) {
 	j = a->tour[i];
 	h = a->tour[i+1];
-	pheromone[j][h] += d_tau;
+	//pheromone[j][h] += d_tau;
+	pheromone[j][h] += 2 * weight / ( a->tour_length + dContribution * instance.n * instance.distance[j][h] );
 	pheromone[h][j] = pheromone[j][h];
     }       
 }
